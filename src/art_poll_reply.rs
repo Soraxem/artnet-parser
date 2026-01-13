@@ -3,8 +3,8 @@ use std::net::Ipv4Addr;
 use crate::{EstaManCode, OemCode, PortAddress};
 
 
-
-enum StyleCode {
+/// Style of the Node
+pub enum StyleCode {
     StNode,
     StController,
     StMedia,
@@ -14,12 +14,14 @@ enum StyleCode {
     StVisual,
 }
 
-
-
-struct ArtPollReply {
+/// Reply to a ArtPoll Packet
+pub struct ArtPollReply {
+    /// IP Address of the replying Node
     ip_address: Ipv4Addr,
+    /// the Nodes Artnet protocol version
     version_info: u16,
     oem: OemCode,
+    /// This field contains the firmware version of the User Bios Extension Area (UBEA). If the UBEA is not programmed, this field contains zero.
     ubea_version: u8,
     inputs: [PortAddress; 4],
     outputs: [PortAddress; 4],
@@ -37,7 +39,8 @@ struct ArtPollReply {
     mac_address: [u8; 6],
 }
 
-struct ArtPollReplyStatus1 {
+/// State of the Node
+pub struct ArtPollReplyStatus1 {
     indicator_state: ArtPollIndicatorState,
     programming_authority: ArtPollProgrammingAuthority,
     booted_from_rom: bool,
@@ -46,26 +49,30 @@ struct ArtPollReplyStatus1 {
 
 }
 
-enum ArtPollIndicatorState {
+/// State of the Indicator Light
+pub enum ArtPollIndicatorState {
     Unknown,
     Locate,
     Mute,
     Normal,
 }
 
-enum ArtPollProgrammingAuthority {
+/// Describes how the nodes artnet port addresses are programmable
+pub enum ArtPollProgrammingAuthority {
     Unknown,
     Manual,
     Programmable,
 }
 
-struct ArtPollReplyPort {
+/// Describes a single port of a node
+pub struct ArtPollReplyPort {
     can_input_data: bool,
     can_output_data: bool,
     port_type: ArtPollReplyPortTypes,
 }
 
-enum ArtPollReplyPortTypes {
+/// Different port types on an artnet node
+pub enum ArtPollReplyPortTypes {
     DMX512,
     MIDI,
     Avab,
@@ -75,7 +82,7 @@ enum ArtPollReplyPortTypes {
     DALI
 }
 
-struct ArtPollReplyGoodOutput {
+pub struct ArtPollReplyGoodOutput {
     dmx_is_ouput: bool,
     includes_dmx_test_packets: bool,
     includes_dmx_sips: bool,
@@ -86,7 +93,7 @@ struct ArtPollReplyGoodOutput {
     convert_from_sacn: bool,
 }
 
-struct ArtPollReplySwMacro {
+pub struct ArtPollReplySwMacro {
     macro_1_active: bool,
     macro_2_active: bool,
     macro_3_active: bool,
@@ -97,7 +104,7 @@ struct ArtPollReplySwMacro {
     macro_8_active: bool,
 }
 
-struct ArtPollReplySwRemote {
+pub struct ArtPollReplySwRemote {
     remote_1_active: bool,
     remote_2_active: bool,
     remote_3_active: bool,
@@ -106,4 +113,15 @@ struct ArtPollReplySwRemote {
     remote_6_active: bool,
     remote_7_active: bool,
     remote_8_active: bool,
+}
+
+
+impl ArtPollReply {
+    pub fn parse(data: &[u8]) -> Result<ArtPollReply, &'static str> {
+        todo!()
+    }
+
+    pub fn serialize(self) -> Vec<u8> {
+        todo!()
+    }
 }
