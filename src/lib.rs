@@ -14,15 +14,13 @@ pub struct EstaManCode(u16);
 pub struct OemCode(u16);
 
 
-
-
 /// Checks if the data is an Artnet Packet
 pub fn is_artnet(data: &[u8]) -> bool {
     let art_net_bytes = b"Art-Net\0";
     return data.len() >= art_net_bytes.len() && data[..art_net_bytes.len()] == *art_net_bytes
 }
 
-
+#[repr(u16)]
 pub enum OpCode {
     OpPoll = 0x2000,
     OpPollReply = 0x2100,
