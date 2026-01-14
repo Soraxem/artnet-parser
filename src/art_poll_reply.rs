@@ -118,10 +118,12 @@ pub struct ArtPollReplySwRemote {
 
 impl ArtPollReply {
     pub fn parse(data: &[u8]) -> Result<ArtPollReply, &'static str> {
+        println!("ArtPollReply Parsing");
         todo!()
     }
 
     pub fn serialize(self) -> Vec<u8> {
+        println!("ArtPollReply Serializing");
         todo!()
     }
 }
