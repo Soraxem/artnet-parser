@@ -9,17 +9,14 @@ pub use crate::art_poll::*;
 pub use crate::art_poll_reply::ArtPollReply;
 pub use crate::art_dmx::ArtDmx;
 
-#[derive(Clone)]
-#[derive(Copy)]
-pub struct PortAddress(u16);
+#[derive(Clone, Copy)]
+pub struct PortAddress(pub u16);
 
-#[derive(Clone)]
-#[derive(Copy)]
-pub struct EstaManCode(u16);
+#[derive(Clone, Copy)]
+pub struct EstaManCode(pub u16);
 
-#[derive(Clone)]
-#[derive(Copy)]
-pub struct OemCode(u16);
+#[derive(Clone, Copy)]
+pub struct OemCode(pub u16);
 
 
 /// Checks if the data is an Artnet Packet
