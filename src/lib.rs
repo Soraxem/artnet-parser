@@ -7,10 +7,16 @@ mod art_poll_reply;
 pub use crate::art_poll::*;
 pub use crate::art_poll_reply::ArtPollReply;
 
+#[derive(Clone)]
+#[derive(Copy)]
 pub struct PortAddress(u16);
 
+#[derive(Clone)]
+#[derive(Copy)]
 pub struct EstaManCode(u16);
 
+#[derive(Clone)]
+#[derive(Copy)]
 pub struct OemCode(u16);
 
 
