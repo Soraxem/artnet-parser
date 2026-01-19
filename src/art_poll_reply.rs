@@ -17,26 +17,41 @@ pub enum StyleCode {
 /// Reply to a ArtPoll Packet
 pub struct ArtPollReply {
     /// IP Address of the replying Node
-    ip_address: Ipv4Addr,
+    pub ip_address: Ipv4Addr,
     /// the Nodes Artnet protocol version
-    version_info: u16,
-    oem: OemCode,
+    pub version_info: u16,
+    /// the Nodes Oem Code
+    pub oem: OemCode,
     /// This field contains the firmware version of the User Bios Extension Area (UBEA). If the UBEA is not programmed, this field contains zero.
-    ubea_version: u8,
-    inputs: [PortAddress; 4],
-    outputs: [PortAddress; 4],
-    status1: ArtPollReplyStatus1,
-    esta_man: EstaManCode,
-    port_name: [u8; 17],
-    long_name: [u8; 63],
-    node_report: [u8; 64],
-    port_types: [ArtPollReplyPort; 4],
-    good_output: [ArtPollReplyGoodOutput; 4],
-    acn_priority: u8,
-    sw_macro: ArtPollReplySwMacro,
-    sw_remote: ArtPollReplySwRemote,
-    style: StyleCode,
-    mac_address: [u8; 6],
+    pub ubea_version: u8,
+    /// Address of the Input ports
+    pub inputs: [PortAddress; 4],
+    /// Address of the Output ports
+    pub outputs: [PortAddress; 4],
+    /// Status of the Node
+    pub status1: ArtPollReplyStatus1,
+    /// This field contains the firmware version of the Esta Man extension area.
+    pub esta_man: EstaManCode,
+    /// Short name of the Node
+    pub port_name: [u8; 17],
+    /// Long name of the Node
+    pub long_name: [u8; 63],
+    /// The Node Report is a 64 byte field that contains information about the Node.
+    pub node_report: [u8; 64],
+    /// The Port Types field contains information about the type of the Nodes ports.
+    pub port_types: [ArtPollReplyPort; 4],
+    /// The Good Output field contains information about the quality of the output of the Nodes ports.
+    pub good_output: [ArtPollReplyGoodOutput; 4],
+    /// The ACN Priority field contains the priority of the Nodes ACN output.
+    pub acn_priority: u8,
+    /// The SW Macro field contains information about the macro keys of the Node.
+    pub sw_macro: ArtPollReplySwMacro,
+    /// The SW Remote field contains information about the remote keys of the Node.
+    pub sw_remote: ArtPollReplySwRemote,
+    /// The Style field contains information about the style of the Node.
+    pub style: StyleCode,
+    /// The MAC Address field contains the MAC address of the Node.
+    pub mac_address: [u8; 6],
 }
 
 /// State of the Node
