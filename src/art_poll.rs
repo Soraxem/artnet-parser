@@ -30,6 +30,27 @@ pub struct ArtPollFlags {
     pub enable_targeted_mode: bool,
 }
 
+/// Default values for an ArtPoll Packet
+impl Default for ArtPoll {
+    fn default() -> Self {
+        Self {
+            protocol_version: 14,
+            flags: ArtPollFlags {
+                send_on_change: false,
+                send_diagnostics: false,
+                unicast_diagnostics: false,
+                disable_vlc_transmission: false,
+                enable_targeted_mode: false,
+            },
+            diag_priority: 0,
+            target_port_address_top: PortAddress(0),
+            target_port_address_bottom: PortAddress(0),
+            esta_man: EstaManCode(0),
+            oem: OemCode(0),
+        }
+    }
+}
+
 impl ArtPoll {
     /// Parse raw data into an ArtPoll Packet. Doesn't check if data even is artnet data.
     pub fn parse(data: &[u8]) -> Result<ArtPoll, &'static str> {
