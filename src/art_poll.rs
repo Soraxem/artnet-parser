@@ -34,7 +34,7 @@ impl ArtPoll {
     /// Parse raw data into an ArtPoll Packet. Doesn't check if data even is artnet data.
     pub fn parse(data: &[u8]) -> Result<ArtPoll, &'static str> {
 
-        let mut parsed = ArtPoll {
+        let parsed = ArtPoll {
             protocol_version: u16::from_le_bytes(data[10..12].try_into().or(Err("Malformed Packet"))?),
             flags: ArtPollFlags {
                 send_on_change: data[12] & 0x01 == 0x01,

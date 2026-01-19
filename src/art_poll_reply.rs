@@ -118,8 +118,28 @@ pub struct ArtPollReplySwRemote {
 
 impl ArtPollReply {
     pub fn parse(data: &[u8]) -> Result<ArtPollReply, &'static str> {
-        println!("ArtPollReply Parsing");
-        todo!()
+        let parsed = ArtPollReply {
+            ip_address: Ipv4Addr::new(data[10], data[11], data[12], data[13]),
+            version_info: u16::from_le_bytes(data[16..17].try_into().or(Err("Malformed Packet"))?),
+            oem: OemCode(0),
+            ubea_version: data[6],
+            inputs: [PortAddress(0); 4],
+            outputs: [PortAddress(0); 4],
+            status1: ArtPollReplyStatus1 {
+                indicator_state: ArtPollIndicatorState::Unknown,
+                programming_authority: ArtPollProgrammingAuthority::Unknown,
+                booted_from_rom: false,
+                rdm_capable: false,
+                ubea_present: false,
+            },
+            esta_man: EstaManCode(0),
+            port_name: [0; 17],
+            long_name: [0; 63],
+            node_report: [0; 64],
+            port_types: [ArtPollReplyPort { can_input_data: false, can_output_data: false, port_type: ArtPollReplyPortTypes::DMX512 }; 4],
+        };
+
+        Ok(parsed)
     }
 
     pub fn serialize(self) -> Vec<u8> {
