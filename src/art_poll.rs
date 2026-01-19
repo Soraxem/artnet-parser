@@ -1,7 +1,7 @@
 
 use crate::{EstaManCode, OemCode, PortAddress, OpCode};
 
-/// Packet for Polling Nodes in the Network. The Nodes shall resond with a ArtPollReply packet.
+/// Packet for Polling Nodes in the Network. The Nodes shall resend with a ArtPollReply packet.
 pub struct ArtPoll {
     /// Version of the Artnet Protocol used
     pub protocol_version: u16,

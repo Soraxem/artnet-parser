@@ -3,9 +3,11 @@
 
 mod art_poll;
 mod art_poll_reply;
+mod art_dmx;
 
 pub use crate::art_poll::*;
 pub use crate::art_poll_reply::ArtPollReply;
+pub use crate::art_dmx::ArtDmx;
 
 #[derive(Clone)]
 #[derive(Copy)]
@@ -30,6 +32,7 @@ pub fn is_artnet(data: &[u8]) -> bool {
 pub enum OpCode {
     OpPoll = 0x2000,
     OpPollReply = 0x2100,
+    OpDmx = 0x5000,
 }
 
 /// fetches the opcode of the packet
@@ -39,6 +42,7 @@ pub fn get_op_code(data: &[u8]) -> Result<OpCode, &'static str> {
     match op_code {
         0x2000 => Ok(OpCode::OpPoll),
         0x2100 => Ok(OpCode::OpPollReply),
+        0x5000 => Ok(OpCode::OpDmx),
         _ => Err("Unknown OpCode")
     }
 }
@@ -47,6 +51,7 @@ pub fn get_op_code(data: &[u8]) -> Result<OpCode, &'static str> {
 pub enum ArtNetPacket {
     ArtPoll(ArtPoll),
     ArtPollReply(ArtPollReply),
+    ArtDmx(ArtDmx),
 }
 
 
@@ -81,6 +86,7 @@ impl ArtNetPacket {
         match self {
             ArtNetPacket::ArtPoll(packet) => packet.serialize(),
             ArtNetPacket::ArtPollReply(packet) => packet.serialize(),
+            ArtNetPacket::ArtDmx(packet) => packet.serialize(),
         }
     }
 }
