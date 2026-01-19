@@ -17,6 +17,7 @@ pub struct ArtDmx {
     pub data: Vec<u8>,
 }
 
+
 impl ArtDmx {
 
     pub fn parse(data: &[u8]) -> Result<ArtDmx, &'static str> {
