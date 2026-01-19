@@ -54,6 +54,31 @@ pub struct ArtPollReply {
     pub mac_address: [u8; 6],
 }
 
+impl Default for ArtPollReply {
+    fn default() -> Self {
+        Self {
+            ip_address: Ipv4Addr::new(0, 0, 0, 0),
+            version_info: 0,
+            oem: OemCode(0),
+            ubea_version: 0,
+            inputs: [PortAddress(0); 4],
+            outputs: [PortAddress(0); 4],
+            status1: ArtPollReplyStatus1::default(),
+            esta_man: EstaManCode(0),
+            port_name: [0; 17],
+            long_name: [0; 63],
+            node_report: [0; 64],
+            port_types: [ArtPollReplyPort::default(); 4],
+            good_output: [ArtPollReplyGoodOutput::default(); 4],
+            acn_priority: 0,
+            sw_macro: ArtPollReplySwMacro::default(),
+            sw_remote: ArtPollReplySwRemote::default(),
+            style: StyleCode::StNode,
+            mac_address: [0; 6],
+        }
+    }
+}
+
 /// State of the Node
 pub struct ArtPollReplyStatus1 {
     indicator_state: ArtPollIndicatorState,
