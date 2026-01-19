@@ -1,9 +1,9 @@
 
 //! Library for Parsing Artnet Packets
 
-mod art_poll;
-mod art_poll_reply;
-mod art_dmx;
+pub mod art_poll;
+pub mod art_poll_reply;
+pub mod art_dmx;
 
 pub use crate::art_poll::*;
 pub use crate::art_poll_reply::ArtPollReply;
