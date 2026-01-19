@@ -75,6 +75,10 @@ impl ArtNetPacket {
                 Ok(packet) => Ok(ArtNetPacket::ArtPollReply(packet)),
                 Err(err) => Err(err),
             },
+            Ok(OpCode::OpDmx) => match ArtDmx::parse(data) {
+                Ok(packet) => Ok(ArtNetPacket::ArtDmx(packet)),
+                Err(err) => Err(err),
+            },
             // Throw an Error if the OpCode exists but is not implemented
             Ok(_) => Err("Packet not implemented"),
             // Throw an Error if the OpCode is not implemented
