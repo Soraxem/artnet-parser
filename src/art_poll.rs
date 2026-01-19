@@ -82,7 +82,7 @@ impl ArtPoll {
         let mut data: Vec<u8> = Vec::new();
 
         data.extend_from_slice(b"Art-Net\0");
-        data.extend_from_slice(&(OpCode::OpPoll as u16).to_be_bytes());
+        data.extend_from_slice(&(OpCode::OpPoll as u16).to_le_bytes());
         data.extend_from_slice(&(self.protocol_version as u16).to_le_bytes());
 
 
