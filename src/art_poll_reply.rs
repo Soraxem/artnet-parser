@@ -184,18 +184,63 @@ pub struct ArtPollReplySwRemote {
 
 impl ArtPollReply {
     pub fn parse(data: &[u8]) -> Result<ArtPollReply, &'static str> {
+
+        // Combining the subnet and net fields
+        let net_and_subnet = ( (data[18] as u16) << 8) | ( ( (data[19] as u16) & 0x0F) << 4 );
+
+        // Iterating through the swin fields
+        let mut inputs = [PortAddress(0); 4];
+        for i in 0..4 {
+            inputs[i] = PortAddress(net_and_subnet | data[186 + i] as u16);
+        }
+
+        // iterating through the swout fields
+        let mut outputs = [PortAddress(0); 4];
+        for i in 0..4 {
+            inputs[i] = PortAddress(net_and_subnet | data[190 + i] as u16);
+        }
+
+        // Copy the binary texts
+        let mut port_name = [0u8; 17];
+        port_name.copy_from_slice(&data[26..43]);
+
+        let mut long_name = [0u8; 63];
+        long_name.copy_from_slice(&data[44..106]);
+
+        let mut node_report = [0u8; 64];
+        node_report.copy_from_slice(&data[108..171]);
+
         let parsed = ArtPollReply {
             ip_address: Ipv4Addr::new(data[10], data[11], data[12], data[13]),
-            version_info: u16::from_le_bytes(data[16..18].try_into().or(Err("Malformed Packet"))?),
-            oem: OemCode(0),
-            ubea_version: data[6],
-            inputs: [PortAddress(0); 4],
-            outputs: [PortAddress(0); 4],
-            status1: ArtPollReplyStatus1::default(),
-            esta_man: EstaManCode(0),
-            port_name: [0; 17],
-            long_name: [0; 63],
-            node_report: [0; 64],
+            version_info: u16::from_be_bytes([data[16], data[17]]),
+            oem: OemCode( u16::from_be_bytes([data[20], data[21]]) ),
+            ubea_version: data[22],
+            inputs: inputs,
+            outputs: outputs,
+            status1: ArtPollReplyStatus1 {
+                indicator_state:
+                    match data[23] & 0xC0 >> 6 {
+                        1 => ArtPollIndicatorState::Locate,
+                        2 => ArtPollIndicatorState::Mute,
+                        3 => ArtPollIndicatorState::Normal,
+                        _ => ArtPollIndicatorState::Unknown
+                    },
+                programming_authority: 
+                    match data[23] & 0x30 >> 4 {
+                        1 => ArtPollProgrammingAuthority::Manual,
+                        2 => ArtPollProgrammingAuthority::Programmable,
+                        _ => ArtPollProgrammingAuthority::Unknown
+                    },
+                booted_from_rom: data[23] & 0x04 == 0x04,
+                rdm_capable: data[23] & 0x02 == 0x02,
+                ubea_present: data[23] & 0x01 == 0x01
+            },
+            esta_man: EstaManCode( u16::from_be_bytes([data[24], data[25]]) ),
+            port_name: port_name,
+            long_name: long_name,
+            node_report: node_report,
+
+            // Implementation incomplete
             port_types: [ArtPollReplyPort::default(); 4],
             good_output: [ArtPollReplyGoodOutput::default(); 4],
             acn_priority: 0,

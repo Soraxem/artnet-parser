@@ -53,6 +53,8 @@ impl Default for ArtPoll {
 
 impl ArtPoll {
     /// Parse raw data into an ArtPoll Packet. Doesn't check if data even is artnet data.
+
+    // Use the field list file in the documentation as visual reference.
     pub fn parse(data: &[u8]) -> Result<ArtPoll, &'static str> {
 
         let parsed = ArtPoll {
@@ -66,13 +68,12 @@ impl ArtPoll {
             },
             diag_priority: data[13],
 
+            // Optional Fields, not implemented
             target_port_address_top: PortAddress(0),
             target_port_address_bottom: PortAddress(0),
             esta_man: EstaManCode(0),
             oem: OemCode(0),
         };
-
-        // TODO: implement optional fields
 
         Ok(parsed)
     }
@@ -111,25 +112,5 @@ impl ArtPoll {
         data.extend_from_slice(&self.oem.0.to_le_bytes());
         
         return data;
-    }
-
-    /// Creates a new ArtPoll Packet with optional values. If values are not provided, default values are used.
-    pub fn new(
-        flags: ArtPollFlags,
-        diag_priority: Option<u8>,
-        target_port_address_top: Option<PortAddress>,
-        target_port_address_bottom: Option<PortAddress>,
-        esta_man: Option<EstaManCode>,
-        oem: Option<OemCode>,
-    ) -> ArtPoll {
-        ArtPoll {
-            protocol_version: 14,
-            flags: flags,
-            diag_priority: diag_priority.unwrap_or(0),
-            target_port_address_top: target_port_address_top.unwrap_or(PortAddress(0)),
-            target_port_address_bottom: target_port_address_bottom.unwrap_or(PortAddress(0)),
-            esta_man: esta_man.unwrap_or(EstaManCode(0)),
-            oem: oem.unwrap_or(OemCode(0)),
-        }
     }
 }
