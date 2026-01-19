@@ -130,7 +130,7 @@ impl ArtPollReply {
     pub fn parse(data: &[u8]) -> Result<ArtPollReply, &'static str> {
         let parsed = ArtPollReply {
             ip_address: Ipv4Addr::new(data[10], data[11], data[12], data[13]),
-            version_info: u16::from_le_bytes(data[16..17].try_into().or(Err("Malformed Packet"))?),
+            version_info: u16::from_le_bytes(data[16..18].try_into().or(Err("Malformed Packet"))?),
             oem: OemCode(0),
             ubea_version: data[6],
             inputs: [PortAddress(0); 4],
