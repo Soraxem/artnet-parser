@@ -204,7 +204,7 @@ impl ArtPollReply {
         port_name.copy_from_slice(&data[26..43]);
 
         let mut long_name = [0u8; 63];
-        long_name.copy_from_slice(&data[44..106]);
+        long_name.copy_from_slice(&data[44..107]);
 
         let mut node_report = [0u8; 64];
         node_report.copy_from_slice(&data[108..171]);
