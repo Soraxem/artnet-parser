@@ -10,7 +10,7 @@ pub use crate::art_poll_reply::ArtPollReply;
 pub use crate::art_dmx::ArtDmx;
 
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct PortAddress(
     /// Legacy, please do not us the field directly this can cause unexpected behaviour
     pub u16
