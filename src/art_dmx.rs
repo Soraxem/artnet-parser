@@ -30,7 +30,7 @@ impl ArtDmx {
     }
 
     /// Serializes an ArtDmx Packet to raw data for sending
-    pub fn serialize(self) -> Vec<u8> {
+    pub fn serialize(&self) -> Vec<u8> {
         let mut fixed_data = [0u8; 18];
 
         fixed_data[0..8].copy_from_slice(b"Art-Net\0");

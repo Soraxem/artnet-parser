@@ -79,7 +79,7 @@ impl ArtPoll {
     }
 
     /// Serializes an ArtPoll Packet to raw data for sending
-    pub fn serialize(self) -> Vec<u8> {
+    pub fn serialize(&self) -> Vec<u8> {
         let mut data: Vec<u8> = Vec::new();
 
         data.extend_from_slice(b"Art-Net\0");

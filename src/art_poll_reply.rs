@@ -253,7 +253,7 @@ impl ArtPollReply {
     }
 
     /// Serializes an ArtPollReply Packet to raw data for sending
-    pub fn serialize(self) -> [u8; 207] {
+    pub fn serialize(&self) -> [u8; 207] {
         let mut data = [0_u8; 207];
 
         // Copying the structs data to the correct positions in the byte array
