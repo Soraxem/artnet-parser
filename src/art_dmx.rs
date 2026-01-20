@@ -11,8 +11,6 @@ pub struct ArtDmx {
     pub physical: u8,
     /// Port address to wich this packet is destined
     pub port_address: PortAddress,
-    /// Length of the DMX data
-    pub length: u16,
     /// DMX data
     pub data: Vec<u8>,
 }
@@ -26,7 +24,6 @@ impl ArtDmx {
             sequence: data[12],
             physical: data[13],
             port_address: PortAddress::unsafe_from_u16(u16::from_le_bytes( [data[14], data[15]] )),
-            length: u16::from_le_bytes( [data[16], data[17]] ),
             data: data[18..].to_vec(),
         };
         return Ok(parsed);
@@ -34,6 +31,19 @@ impl ArtDmx {
 
     /// Serializes an ArtDmx Packet to raw data for sending
     pub fn serialize(self) -> Vec<u8> {
-        todo!()
+        let mut fixed_data = [0u8; 18];
+
+        fixed_data[0..8].copy_from_slice(b"Art-Net\0");
+        fixed_data[8..10].copy_from_slice(&(OpCode::OpDmx as u16).to_le_bytes());
+        fixed_data[10..12].copy_from_slice(&(self.protocol_version as u16).to_le_bytes());
+        fixed_data[12] = self.sequence;
+        fixed_data[13] = self.physical;
+        fixed_data[14..16].copy_from_slice(&(self.port_address.0 as u16).to_le_bytes());
+        fixed_data[16..18].copy_from_slice(&(self.data.len() as u16).to_le_bytes());
+
+        let mut data = fixed_data.to_vec();
+        data.extend_from_slice(&self.data);
+
+        return data;
     }
 }
