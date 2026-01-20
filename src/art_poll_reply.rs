@@ -207,7 +207,7 @@ impl ArtPollReply {
         long_name.copy_from_slice(&data[44..107]);
 
         let mut node_report = [0u8; 64];
-        node_report.copy_from_slice(&data[108..171]);
+        node_report.copy_from_slice(&data[108..172]);
 
         let parsed = ArtPollReply {
             ip_address: Ipv4Addr::new(data[10], data[11], data[12], data[13]),
