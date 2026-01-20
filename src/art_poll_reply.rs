@@ -257,18 +257,18 @@ impl ArtPollReply {
         let mut data = [0_u8; 207];
 
         // Copying the structs data to the correct positions in the byte array
-        
-        data[0..].copy_from_slice(b"Art-Net\0");
-        data[8..].copy_from_slice(&(OpCode::OpPollReply as u16).to_le_bytes());
-        data[10..].copy_from_slice(&self.ip_address.octets());
-        data[14..].copy_from_slice(&6454_u16.to_be_bytes());
-        data[16..].copy_from_slice(&self.version_info.to_be_bytes());
+
+        data[0..8].copy_from_slice(b"Art-Net\0");
+        data[8..10].copy_from_slice(&(OpCode::OpPollReply as u16).to_le_bytes());
+        data[10..14].copy_from_slice(&self.ip_address.octets());
+        data[14..16].copy_from_slice(&6454_u16.to_be_bytes());
+        data[16..18].copy_from_slice(&self.version_info.to_be_bytes());
 
         // Using net and Subnet of the first input -> not safe, a problem for another day ;-)
         data[18] = self.inputs[0].net();
         data[19] = self.inputs[0].subnet();
 
-        data[20..].copy_from_slice(&self.oem.0.to_be_bytes());
+        data[20..22].copy_from_slice(&self.oem.0.to_be_bytes());
 
         data[22] = self.ubea_version;
 
@@ -296,7 +296,7 @@ impl ArtPollReply {
             data[23] |= 0x01;
         }
 
-        data[24..].copy_from_slice(&self.esta_man.0.to_be_bytes());
+        data[24..26].copy_from_slice(&self.esta_man.0.to_be_bytes());
 
         data[26..44].copy_from_slice(&self.port_name);
         data[44..108].copy_from_slice(&self.long_name);
