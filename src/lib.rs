@@ -149,7 +149,7 @@ impl ArtNetPacket {
     pub fn serialize(self) -> Vec<u8> {
         match self {
             ArtNetPacket::ArtPoll(packet) => packet.serialize(),
-            ArtNetPacket::ArtPollReply(packet) => packet.serialize(),
+            ArtNetPacket::ArtPollReply(packet) => packet.serialize().to_vec(),
             ArtNetPacket::ArtDmx(packet) => packet.serialize(),
         }
     }

@@ -252,15 +252,63 @@ impl ArtPollReply {
         Ok(parsed)
     }
 
-    pub fn serialize(self) -> Vec<u8> {
+    /// Serializes an ArtPollReply Packet to raw data for sending
+    pub fn serialize(self) -> [u8; 207] {
+        let mut data = [0_u8; 207];
 
-        let mut data: Vec<u8> = Vec::new();
+        // Copying the structs data to the correct positions in the byte array
+        
+        data[0..].copy_from_slice(b"Art-Net\0");
+        data[8..].copy_from_slice(&(OpCode::OpPollReply as u16).to_le_bytes());
+        data[10..].copy_from_slice(&self.ip_address.octets());
+        data[14..].copy_from_slice(&6454_u16.to_be_bytes());
+        data[16..].copy_from_slice(&self.version_info.to_be_bytes());
 
-        data.extend_from_slice(b"Art-Net\0");
-        data.extend_from_slice(&(OpCode::OpPollReply as u16).to_le_bytes());
-        data.extend_from_slice(&self.ip_address.octets());
+        // Using net and Subnet of the first input -> not safe, a problem for another day ;-)
+        data[18] = self.inputs[0].net();
+        data[19] = self.inputs[0].subnet();
 
+        data[20..].copy_from_slice(&self.oem.0.to_be_bytes());
 
+        data[22] = self.ubea_version;
+
+        // Building the Status1 byte
+        match self.status1.indicator_state {
+            ArtPollIndicatorState::Locate => data[23] |= 0x40,
+            ArtPollIndicatorState::Mute => data[23] |= 0x80,
+            ArtPollIndicatorState::Normal => data[23] |= 0xC0,
+            _ => {}
+        }
+        
+        match self.status1.programming_authority {
+            ArtPollProgrammingAuthority::Manual => data[23] |= 0x10,
+            ArtPollProgrammingAuthority::Programmable => data[23] |= 0x20,
+            _ => {}
+        }
+
+        if self.status1.booted_from_rom {
+            data[23] |= 0x04;
+        }
+        if self.status1.rdm_capable {
+            data[23] |= 0x02;
+        }
+        if self.status1.ubea_present {
+            data[23] |= 0x01;
+        }
+
+        data[24..].copy_from_slice(&self.esta_man.0.to_be_bytes());
+
+        data[26..44].copy_from_slice(&self.port_name);
+        data[44..108].copy_from_slice(&self.long_name);
+        data[108..172].copy_from_slice(&self.node_report);
+
+        // Iterate Swin and Swout
+        for i in 0..4 {
+            data[186 + i] = self.inputs[i].universe();
+        }
+        for i in 0..4 {
+            data[190 + i] = self.outputs[i].universe();
+        }
 
         println!("ArtPollReply Serializing");
 
