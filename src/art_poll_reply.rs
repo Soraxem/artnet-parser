@@ -310,8 +310,6 @@ impl ArtPollReply {
             data[190 + i] = self.outputs[i].universe();
         }
 
-        println!("ArtPollReply Serializing");
-
         return data
     }
 }
