@@ -298,7 +298,7 @@ impl ArtPollReply {
 
         data[24..26].copy_from_slice(&self.esta_man.0.to_be_bytes());
 
-        data[26..44].copy_from_slice(&self.port_name);
+        data[26..43].copy_from_slice(&self.port_name);
         data[44..108].copy_from_slice(&self.long_name);
         data[108..172].copy_from_slice(&self.node_report);
 
