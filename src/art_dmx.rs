@@ -22,11 +22,11 @@ impl ArtDmx {
 
     pub fn parse(data: &[u8]) -> Result<ArtDmx, &'static str> {
         let mut parsed = ArtDmx {
-            protocol_version: u16::from_le_bytes(data[10..12].try_into().or(Err("Malformed Packet"))?),
+            protocol_version: u16::from_le_bytes( [data[10], data[11]] ),
             sequence: data[12],
             physical: data[13],
-            port_address: PortAddress(0),
-            length: u16::from_le_bytes(data[16..18].try_into().or(Err("Malformed Packet"))?),
+            port_address: PortAddress::unsafe_from_u16(u16::from_le_bytes( [data[14], data[15]] )),
+            length: u16::from_le_bytes( [data[16], data[17]] ),
             data: data[18..].to_vec(),
         };
         return Ok(parsed);
