@@ -1,6 +1,6 @@
 use std::net::Ipv4Addr;
 
-use crate::{EstaManCode, OemCode, PortAddress};
+use crate::{EstaManCode, OemCode, PortAddress, OpCode};
 
 
 /// Style of the Node
@@ -185,19 +185,18 @@ pub struct ArtPollReplySwRemote {
 impl ArtPollReply {
     pub fn parse(data: &[u8]) -> Result<ArtPollReply, &'static str> {
 
-        // Combining the subnet and net fields
-        let net_and_subnet = ( (data[18] as u16) << 8) | ( ( (data[19] as u16) & 0x0F) << 4 );
-
         // Iterating through the swin fields
-        let mut inputs = [PortAddress(0); 4];
+        let mut inputs = [PortAddress::default(); 4];
         for i in 0..4 {
-            inputs[i] = PortAddress(net_and_subnet | data[186 + i] as u16);
+            // using unsafe because the values are assumed to be in range when recieved
+            inputs[i] = PortAddress::unsafe_new(data[18], data[19], data[186 + i]);
         }
 
         // iterating through the swout fields
-        let mut outputs = [PortAddress(0); 4];
+        let mut outputs = [PortAddress::default(); 4];
         for i in 0..4 {
-            inputs[i] = PortAddress(net_and_subnet | data[190 + i] as u16);
+            // using unsafe because the values are assumed to be in range when recieved
+            outputs[i] = PortAddress::unsafe_new(data[18], data[19], data[190 + i]);
         }
 
         // Copy the binary texts
@@ -254,7 +253,17 @@ impl ArtPollReply {
     }
 
     pub fn serialize(self) -> Vec<u8> {
+
+        let mut data: Vec<u8> = Vec::new();
+
+        data.extend_from_slice(b"Art-Net\0");
+        data.extend_from_slice(&(OpCode::OpPollReply as u16).to_le_bytes());
+        data.extend_from_slice(&self.ip_address.octets());
+
+
+
         println!("ArtPollReply Serializing");
-        todo!()
+
+        return data
     }
 }
